@@ -12,8 +12,8 @@ db = SQLAlchemy(app)
 
 class Person(db.Model):
   id = db.Column(db.Integer, primary_key=True)
-  Name = db.Column(db.String(80), unique=True, nullable=False)
-  Surname = db.Column(db.String(120), unique=True, nullable=False)
+  Name = db.Column(db.String(80),unique=False, nullable=False)
+  Surname = db.Column(db.String(120),unique=False, nullable=False)
 
   def __init__(self, Name, Surname):
     self.Name = Name
@@ -21,13 +21,13 @@ class Person(db.Model):
 
 db.create_all()
 
-@app.route('/items/<id>', methods=['GET'])
+@app.route('/person/<id>', methods=['GET'])
 def get_item(id):
   item = Person.query.get(id)
   del item.__dict__['_sa_instance_state']
   return jsonify(item.__dict__)
 
-@app.route('/items', methods=['GET'])
+@app.route('/person', methods=['GET'])
 def get_items():
   items = []
   for item in db.session.query(Person).all():
@@ -35,23 +35,23 @@ def get_items():
     items.append(item.__dict__)
   return jsonify(items)
 
-@app.route('/items', methods=['POST'])
+@app.route('/person', methods=['POST'])
 def create_item():
   body = request.get_json()
   db.session.add(Person(body['Name'], body['Surname']))
   db.session.commit()
-  return "item created"
+  return "Person created"
 
-@app.route('/items/<id>', methods=['PUT'])
+@app.route('/person/<id>', methods=['PUT'])
 def update_item(id):
   body = request.get_json()
   db.session.query(Person).filter_by(id=id).update(
     dict(Name=body['Name'], Surname=body['Surname']))
   db.session.commit()
-  return "item updated"
+  return "Person updated"
 
-@app.route('/items/<id>', methods=['DELETE'])
+@app.route('/person/<id>', methods=['DELETE'])
 def delete_item(id):
   db.session.query(Person).filter_by(id=id).delete()
   db.session.commit()
-  return "item deleted"
+  return "Person deleted"
