@@ -24,14 +24,10 @@
                     dest: "/home/ubuntu/"
           - name: "run docker build"
             shell: "docker compose up -d"       
-            notify: "restart docker service post deployment"
   handlers:
           - name: "enable docker service"
             service:
                     name: docker
                     state: started
                     enabled: yes
-          - name: "restart docker service post deployment"
-            service:
-                    name: docker
-                    state: restarted
+
