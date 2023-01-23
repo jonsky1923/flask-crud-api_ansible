@@ -8,4 +8,4 @@ COPY . .
 
 EXPOSE 80
 
-CMD ["flask", "run", "--host=3.19.63.120", "--port=80"]
+CMD ["flask", "run", "--host=3.15.169.65", "--port=80"]
