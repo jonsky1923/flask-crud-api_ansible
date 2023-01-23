@@ -1,0 +1,2 @@
+server1 ansible_host=172.31.40.51 ansible_user=ubuntu
+local ansible_connection=local
