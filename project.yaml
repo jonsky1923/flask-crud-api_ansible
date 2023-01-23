@@ -16,8 +16,7 @@
           gitdir: "/tmp/flask-crud-api/"
   tasks:
           - name: "install docker"
-            apt:
-                    name: docker
+            ansible.builtin.shell: cd ~ && curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh
             notify: "enable docker service"
           - name: "deploy flask-crud-api"
             copy:
