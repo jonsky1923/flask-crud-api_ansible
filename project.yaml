@@ -1,0 +1,38 @@
+- name: "generate flask folder"
+  hosts: local
+  become: true
+  vars:
+          gitdir: "/tmp/flask-crud-api/"
+  tasks:
+          - name: "clone the flask-crud-api"
+            git:
+                    repo: 'https://github.com/jonsky1923/flask-crud-api_ansible.git'
+                    dest: "{{ gitdir }}"
+                    version: "main"
+- name: "setup webserver and deploy Docker app"
+  hosts: server1 
+  become: true
+  vars:
+          gitdir: "/tmp/flask-crud-api/"
+  tasks:
+          - name: "install docker"
+            apt:
+                    name: docker
+            notify: "enable docker service"
+          - name: "deploy flask-crud-api"
+            copy:
+                    src: "{{ gitdir }}"
+                    dest: "/home/ubuntu/"
+          - name: "run docker build"
+            shell: "docker compose up"       
+            notify: "restart docker service post deployment"
+  handlers:
+          - name: "enable docker service"
+            service:
+                    name: docker
+                    state: started
+                    enabled: yes
+          - name: "restart docker service post deployment"
+            service:
+                    name: docker
+                    state: restarted
